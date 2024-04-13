@@ -1,8 +1,9 @@
 import express from 'express';
-//import './db/connection.js';
+import './db/connection.js';
 //import MongoStore from 'connect-mongo'; // session store for passport
 import cors from 'cors';
 import { join } from 'path';
+import { Skin } from './models/skin.js';
 
 const app = express();
 
@@ -33,6 +34,12 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
 	res.sendFile(join(import.meta.dirname, '../views/index.html'));
+});
+
+app.get('/skins', async (req, res) => {
+    console.log('Request for skins received');
+    let skins = await Skin.find();
+    res.send(skins);
 });
 
 export default app
