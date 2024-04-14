@@ -49,7 +49,7 @@ async function compareSkins() {
 
 async function getBuffSkins() {
 	try {
-		const response = await fetch('http://localhost:3000/skins')
+		const response = await fetch('http://localhost:2086/skins')
 		if (response.ok) {
 			const data = await response.json()
 			buffSkins = data.reduce((obj, item) => {

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "CS Money",
   "version": "1.0",
-  "permissions": ["storage", "alarms", "webNavigation", "tabs"],
+  "permissions": ["storage", "alarms", "webNavigation", "tabs", "storage"],
   "host_permissions": ["<all_urls>"],
   "icons": {
     "16": "images/16.png",
@@ -18,5 +18,15 @@
       "128": "images/128.png"
     },
     "default_title": "Click to go to website"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://cs.money/*"],
+      "js": ["csmoney.js"]
+    },
+    {
+      "matches": ["*://*.yuron.xyz/*", "*://localhost/*"],
+      "js": ["parser.js"]
+    }
+  ]
 }

@@ -16,13 +16,39 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  const buffSkins = await getBuffSkins()
-  chrome.storage.local.set({ buffSkins });
+	if (alarm.name === 'saveBuffSkins') {
+		console.log('Saving buffSkins')
+		const buffSkins = await getBuffSkins()
+		if (!buffSkins) return;
+		chrome.storage.local.set({ buffSkins });
+	}
+});
+
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+	// if (sender.url.includes('http://yuron.xyz:2086/'))
+	if (message.parse) {
+		chrome.tabs.query({ url: 'https://cs.money/*' }, (tabs) => {
+			if (!tabs.length) {
+				chrome.tabs.create({ url: 'https://cs.money/', active: false });
+			} else {
+				const tabId = tabs[0].id;
+				chrome.tabs.sendMessage(tabId, message);
+			}
+    });
+	}
+	if (message.parsedSkins) {
+		chrome.tabs.query({ url: ["*://*.yuron.xyz/*", "*://localhost/*"] }, (tabs) => {
+      for (const tab of tabs) {
+        chrome.tabs.sendMessage(tab.id, message);
+      }
+    });
+	}
 });
 
 async function getBuffSkins() {
 	try {
-		const response = await fetch('http://localhost:3000/skins')
+		const response = await fetch('http://localhost:2086/skins')
 		if (response.ok) {
 			const data = await response.json()
 			return data.reduce((obj, item) => {
@@ -30,10 +56,9 @@ async function getBuffSkins() {
 				return obj;
 			}, {});
 		} else {
-			console.log('Server error: ' + response.status)
+			console.log('Server error getting buffSkins: ' + response.status)
 		}
 	} catch (error) {
 		console.log(error)
 	}
 }
-
