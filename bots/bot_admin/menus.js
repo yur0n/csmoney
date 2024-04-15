@@ -4,7 +4,7 @@ import { User, Sub } from "../../src/models/models.js"
 const main = new Menu('main-menu')
 	.text('➕ Generate code', async ctx => {
 		const code = await generateCode();
-		ctx.reply(`Generated code: ${code.code}, user index: ${code.index}`);
+		ctx.reply(`Generated code: ${code.code}\nUser index: ${code.index}`);
 	}).row()
 	.text('❌ Delete subscription by user index', async ctx => {
 		await ctx.conversation.enter('deleteSub')
