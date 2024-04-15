@@ -28,7 +28,7 @@ bot.use(main)
 
 
 bot.command('start', async ctx => {
-    await ctx.reply("Управление подписчиками",{
+    await ctx.reply("Admin panel",{
 		reply_markup: main,
 	});
 })
