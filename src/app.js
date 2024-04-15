@@ -3,7 +3,8 @@ import './db/connection.js';
 //import MongoStore from 'connect-mongo'; // session store for passport
 import cors from 'cors';
 import { join } from 'path';
-import { Skin } from './models/skin.js';
+import { Skin, Sub } from './models/models.js';
+import '../bots/bot_admin.js'
 
 const app = express();
 
@@ -31,18 +32,23 @@ app.use((req, res, next) => {
     else res.locals.cookie = {};
     next();
 });
-let codes = ['12345'];
 
 app.get('/', auth, (req, res) => {
 	res.render('index');
 });
 
-app.post('/subscribe', (req, res) => {
-	const { body: { code } } = req;
-	if (code) {
-		if (codes.includes(code)) return res.send({ success: 'Access granted' });
+app.post('/subscribe', async (req, res) => {
+	try {
+		const { body: { code } } = req;
+		if (code) {
+			const sub = await Sub.findOne({ code });
+			if (sub) return res.send({ success: 'Access granted' });
+		}
+		res.send({ fail: 'Invalid code' });
+	} catch (error) {
+		console.log(error)
+		res.send({ fail: error.message });
 	}
-	res.send({ fail: 'Invalid code' });
 });
 
 // app.get('/parsing', auth, async (req, res) => {
@@ -56,11 +62,19 @@ app.get('/skins', async (req, res) => {
 });
 
 async function auth(req, res, next) {
-	const { auth } = res.locals.cookie;
-	if (auth && codes.includes(auth)) {
-		return next();
+	try {
+		const { auth } = res.locals.cookie;
+		if (auth) {
+			const sub = await Sub.findOne({ code: auth });
+			if (sub) {
+				return next();
+			}
+		}
+		res.render('auth');
+	} catch (error) {
+		console.log(error);
+		res.render('auth');
 	}
-	res.render('auth');
 }
 
 export default app
