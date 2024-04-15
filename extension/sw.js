@@ -2,6 +2,7 @@ chrome.action.onClicked.addListener(() => {
   chrome.tabs.query({ url: 'http://yuron.xyz:2086/*' }, (tabs) => {
     if (!tabs.length) {
       chrome.tabs.create({ url: 'http://yuron.xyz:2086/', active: true });
+
     } else {
       chrome.tabs.update(tabs[0].id, { active: true });
     }
@@ -25,16 +26,19 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 });
 
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
 	// if (sender.url.includes('http://yuron.xyz:2086/'))
 	if (message.parse) {
-		chrome.tabs.query({ url: 'https://cs.money/*' }, (tabs) => {
+		chrome.tabs.query({ url: 'https://cs.money/*' }, async (tabs) => {
+			let tabId;
 			if (!tabs.length) {
-				chrome.tabs.create({ url: 'https://cs.money/', active: false });
+				const tab = chrome.tabs.create({ url: 'https://cs.money/', active: false });
+				tabId = tab.id;
+				await new Promise(resolve => setTimeout(resolve, 1000));
 			} else {
-				const tabId = tabs[0].id;
-				chrome.tabs.sendMessage(tabId, message);
+				tabId = tabs[0].id;
 			}
+			chrome.tabs.sendMessage(tabId, message);
     });
 	}
 	if (message.parsedSkins) {

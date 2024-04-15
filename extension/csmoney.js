@@ -21,7 +21,8 @@ async function compareSkins({ maxPrice, minPrice, maxProfit, minProfit }) {
 				name: skin.name,
 				buffPrice,
 				csPrice: skin.price,
-				profit: diff.toFixed(2)
+				profit: diff.toFixed(2),
+				id: skin.id
 			});
 		}
 	}
@@ -29,30 +30,29 @@ async function compareSkins({ maxPrice, minPrice, maxProfit, minProfit }) {
 }
 
 async function getSkins(maxPrice, minPrice) {
-	for (let i = 0; i <= 60; i += 60) {
-		try {
-			// let skins = {}
-			const skins = [];
-			const offset = i;
-			const url = `https://cs.money/1.0/market/sell-orders?limit=60&maxPrice=${maxPrice}&minPrice=${minPrice}&offset=${offset}&order=desc&sort=insertDate`
-			const response = await fetch(url);
-			if (response.ok) {
-					const data = await response.json()
-					data.items.forEach(item => {
-						skins.push({
-							name: item.asset.names.full,
-							image: item.asset.images.steam,
-							price: item.pricing.computed
-						});
+	try {
+		const skins = [];
+		const url = `https://cs.money/1.0/market/sell-orders?limit=60&maxPrice=${maxPrice}&minPrice=${minPrice}&order=desc&sort=insertDate&offset=0`
+		const response = await fetch(url);
+		if (response.ok) {
+				const data = await response.json()
+				console.log(data.items[0].asset.names.full)
+				data.items.forEach(item => {
+					skins.push({
+						name: item.asset.names.full,
+						image: item.asset.images.steam,
+						price: item.pricing.computed,
+						id: item.asset.id
 					});
-				return skins;
-			} else {
-				console.log('Failed to fetch: ' + response.status)
-				return { error: 'Failed to fetch', status: response.status }
-			}
-		} catch (error) {
-			console.log(error)
-			return { error: error.message }
+				});
+			return skins;
+		} else {
+			console.log('Failed to fetch: ' + response.status)
+			return { error: 'Failed to fetch', status: response.status }
 		}
+	} catch (error) {
+		console.log(error)
+		return { error: error.message, status: 500 }
 	}
 }
+

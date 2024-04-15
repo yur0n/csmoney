@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CS.MONEY PARER</title>
+	<link rel="stylesheet" href="/css/tailwind.css">
+</head>
+<body>
+	<div class="min-h-screen bg-gray-900 flex flex-col items-center justify-center" style="background-image: url(../img/main-bg.png);">
+		<h1 class="text-5xl text-white font-bold mb-8 animate-pulse">
+			Welcome to CS.MONEY PARSER!
+		</h1>
+		<p class="text-white text-lg mb-8">
+			Please, enter your subscription code to access the site
+		</p>
+		<form class=" bg-gray-900 flex flex-col items-center">
+			<input name="code" placeholder="">
+			<button type="submit" class="text-white text-lg">
+				Enter
+			</button>
+		</form>
+	</div> 
+<script>
+	document.querySelector('form').addEventListener('submit', async (e) => {
+		e.preventDefault();
+		const code = e.target.code.value;
+		const response = await fetch('/subscribe', {
+				method: 'POST',
+				headers: {
+						'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ code }),
+		});
+		if (response.ok) {
+			const res = await response.json();
+			if (res.success) {
+				document.cookie = `auth=${code}; path=/`;
+				location.reload();
+			} else if (res.fail) {
+				document.querySelector('p').textContent = res.fail;
+				setTimeout(() => {
+					document.querySelector('p').textContent = 'Please, enter your subscription code to access the site';
+				}, 3000);
+			}
+		} else {
+			document.querySelector('p').textContent = 'Server error. Please try again later';
+		}
+});
+</script>
+</body> 
+</html>
