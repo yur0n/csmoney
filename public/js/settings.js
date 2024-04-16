@@ -1,16 +1,20 @@
-const maxPrice = document.getElementById('max-price');
-const minPrice = document.getElementById('min-price');
-const maxProfit = document.getElementById('max-profit');
-const minProfit = document.getElementById('min-profit');
-
 const inputs = document.querySelectorAll('input');
 
 inputs.forEach(input => {
-	input.value = localStorage.getItem(input.id) || '';
+	let value = localStorage.getItem(input.id);
+	const profit = input.id === 'max-profit' || input.id === 'min-profit';
+	input.value = value ? profit ? value + '%' : value : '';
 });
 
 inputs.forEach(input => {
 	input.addEventListener('change', () => {
-		localStorage.setItem(input.id, input.value);
+		let value = input.value;
+		const profit = input.id === 'max-profit' || input.id === 'min-profit';
+		if (profit) {
+			value = value.toString().replace('%', '');
+			input.value = value + '%';
+			
+		}
+		localStorage.setItem(input.id, value);
 	});
 });

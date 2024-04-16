@@ -54,11 +54,13 @@ clearButton.addEventListener('click', () => {
 
 
 async function start() {
+    const minProfitCoef = 1 - parseInt(localStorage.getItem('min-profit')) / 100;
+    const maxProfitCoef = 1 + parseInt(localStorage.getItem('max-profit')) / 100;
     const data = {
         maxPrice: localStorage.getItem('max-price') || 1000,
         minPrice: localStorage.getItem('min-price') || 100,
-        minProfit: localStorage.getItem('min-profit') || 0.8,
-        maxProfit: localStorage.getItem('max-profit') || 1.5
+        minProfit: minProfitCoef || 0.8,
+        maxProfit: maxProfitCoef || 1.5
     }
     const row = document.createElement('div');
     row.classList.add('table-content__info-row');

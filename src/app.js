@@ -34,6 +34,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', auth, (req, res) => {
+	if (!req.user.auth) return res.render('auth');
 	res.render('index');
 });
 
@@ -67,13 +68,16 @@ async function auth(req, res, next) {
 		if (auth) {
 			const sub = await Sub.findOne({ code: auth });
 			if (sub) {
+				req.user = { auth: true };
 				return next();
 			}
 		}
-		res.render('auth');
+		req.user = { auth: false };
+		next();
 	} catch (error) {
 		console.log(error);
-		res.render('auth');
+		req.user = { auth: false };
+		next();
 	}
 }
 
