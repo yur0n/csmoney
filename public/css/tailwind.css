@@ -221,6 +221,10 @@ textarea {
   /* 3 */
 }
 
+form {
+  background-color: rgba(255, 255, 255, 0);
+}
+
 input {
   width: 300px;
   border-radius: 10px;
@@ -229,8 +233,8 @@ input {
   text-align: center;
 }
 button {
-  width: 100px;
-  border-color: aquamarine;
+  width: 150px;
+  font-size: x-large;
   border: 2px solid;
   border-radius: 5px;
   margin-top: 10px;

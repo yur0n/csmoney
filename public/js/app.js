@@ -5,7 +5,7 @@ const startButton = document.querySelector('.table-top__start');
 const clearButton = document.querySelector('.table-top__clear');
 const modals = document.querySelectorAll('.modal');
 const table = document.querySelector('.table-content__info');
-const logsTable = document.querySelector('.logs-content');
+const logsTable = document.querySelector('.logs-content__info');
 
 let interval;
 const histrory = [];
@@ -45,6 +45,8 @@ startButton.addEventListener('click', () => {
 });
 
 clearButton.addEventListener('click', () => {
+    table.innerHTML = '';
+    logsTable.innerHTML = '';
     if (clearButton.classList.contains('active')) {
         setTimeout(() => {
             clearButton.classList.remove('active');
@@ -84,9 +86,11 @@ window.addEventListener("message", (e) => {
             return;
         }
         console.log(skins);
+        const toBot = [];
         skins.forEach(skin => {
             if (histrory.includes(skin.id)) return;
             histrory.push(skin.id);
+            toBot.push(skin);
             const row = document.createElement('div');
             row.classList.add('table-content__info-row');
             row.innerHTML = `
@@ -97,6 +101,19 @@ window.addEventListener("message", (e) => {
             `;
             table.appendChild(row);
         })
+        console.log(toBot)
+        if (toBot.length) {
+            fetch('/telegram', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ chatId: localStorage.getItem('telegram-id'), data: toBot })
+            })
+            .then(res => res.json())
+            .then(console.log)
+            .catch(console.error);
+        }
     }
 });
 
@@ -107,12 +124,4 @@ function formatDate() {
     const seconds = String(now.getSeconds()).padStart(2, '0');
   
     return `${hours}:${minutes}:${seconds}`;
-}
-
-async function isAllowed() {
-    try {
-
-    } catch (error) {
-        console.log(error);
-    }
 }

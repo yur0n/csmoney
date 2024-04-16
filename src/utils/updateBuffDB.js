@@ -16,7 +16,6 @@ async function updateSkins() {
 			}
       await saveSkin(id, name, price);
       console.log(`skin ${name} saved`)
-      await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
       console.error(`Error updating skin ${name}:`, error);
     }
@@ -35,8 +34,9 @@ async function saveSkin(_id, name, price ) {
   }
 }
 
-async function getSkinPrice(id, attmeps = 0) {
-	if (attmeps > 1) return 0;
+async function getSkinPrice(id, attempts = 0) {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+	if (attempts > 1) return 0;
   let price = 0;
   try {
     const usdToCny = await fetchCurrency();
@@ -48,10 +48,11 @@ async function getSkinPrice(id, attmeps = 0) {
       price = cnyPrice ? Math.max(0.01, parseFloat((cnyPrice / usdToCny).toFixed(2))) : 0;
     } else {
       console.error(`HTTP-Error: ${response.status}`);
+      price = await getSkinPrice(id, ++attempts);
     }
   } catch (error) {
     console.error(`Error fetching skin price:`, error);
-		return getSkinPrice(id, ++attmeps);
+		price = await getSkinPrice(id, ++attempts);
   }
 
   return price;

@@ -32,9 +32,10 @@ chrome.runtime.onMessage.addListener((message) => {
 		chrome.tabs.query({ url: 'https://cs.money/*' }, async (tabs) => {
 			let tabId;
 			if (!tabs.length) {
-				const tab = chrome.tabs.create({ url: 'https://cs.money/', active: false });
+				const tab = await chrome.tabs.create({ url: 'https://cs.money/', active: false });
 				tabId = tab.id;
-				await new Promise(resolve => setTimeout(resolve, 1000));
+				console.log(tab)
+				await new Promise(resolve => setTimeout(resolve, 2000));
 			} else {
 				tabId = tabs[0].id;
 			}
@@ -52,7 +53,7 @@ chrome.runtime.onMessage.addListener((message) => {
 
 async function getBuffSkins() {
 	try {
-		const response = await fetch('http://localhost:2086/skins')
+		const response = await fetch('http://yuron.xyz:2086/skins')
 		if (response.ok) {
 			const data = await response.json()
 			return data.reduce((obj, item) => {

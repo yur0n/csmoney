@@ -22,7 +22,8 @@ async function compareSkins({ maxPrice, minPrice, maxProfit, minProfit }) {
 				buffPrice,
 				csPrice: skin.price,
 				profit: diff.toFixed(2),
-				id: skin.id
+				id: skin.id,
+				photo: skin.photo
 			});
 		}
 	}
@@ -36,13 +37,13 @@ async function getSkins(maxPrice, minPrice) {
 		const response = await fetch(url);
 		if (response.ok) {
 				const data = await response.json()
-				console.log(data.items[0].asset.names.full)
 				data.items.forEach(item => {
 					skins.push({
 						name: item.asset.names.full,
 						image: item.asset.images.steam,
 						price: item.pricing.computed,
-						id: item.asset.id
+						id: item.asset.id,
+						photo: item.asset.images.screenshot || item.asset.images.steam
 					});
 				});
 			return skins;
