@@ -8,6 +8,8 @@ import notifyTg from '../bots/bot_notifier.js';
 // import '../bots/bot_admin.js'
 import '../bots/bot_notifier.js'
 
+const codePattern = /^[A-Za-z0-9%$#@!*()^]{2}[A-Za-z0-9%$#@!*()^]\d{2}[A-Za-z0-9%$#@!*()^]\d{2}[A-Za-z0-9%$#@!*()^]\d{2}[A-Za-z0-9%$#@!*()^]\d+[A-Za-z0-9%$#@!*()^]\d+$/;
+
 const app = express();
 
 app.use(express.json());
@@ -41,7 +43,6 @@ app.get('/', auth, (req, res) => {
 });
 
 app.post('/telegram', async (req, res) => {
-	console.log('Request for telegram notification received');
 	try {
 		const { chatId, data } = req.body;
 		if (chatId && data) {
@@ -58,7 +59,7 @@ app.post('/telegram', async (req, res) => {
 app.post('/subscribe', async (req, res) => {
 	try {
 		const { code } = req.body;
-		if (code) {
+		if (code && codePattern.test(code)) {
 			const sub = await Sub.findOne({ code });
 			if (sub) return res.send({ success: 'Access granted' });
 		}
@@ -74,26 +75,23 @@ app.post('/subscribe', async (req, res) => {
 // });
 
 app.get('/skins', async (req, res) => {
-    console.log('Request for skins received');
     let skins = await Skin.find();
     res.send(skins);
 });
 
 async function auth(req, res, next) {
+	req.user = { auth: false };
 	try {
 		const { auth } = res.locals.cookie;
-		if (auth) {
+		if (auth && codePattern.test(auth)) {
 			const sub = await Sub.findOne({ code: auth });
 			if (sub) {
 				req.user = { auth: true };
-				return next();
 			}
 		}
-		req.user = { auth: false };
 		next();
 	} catch (error) {
 		console.log(error);
-		req.user = { auth: false };
 		next();
 	}
 }

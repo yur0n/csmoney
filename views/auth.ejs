@@ -24,6 +24,7 @@
 <script>
 	document.querySelector('form').addEventListener('submit', async (e) => {
 		e.preventDefault();
+		let p = document.querySelector('p');
 		const code = e.target.code.value;
 		const response = await fetch('/subscribe', {
 				method: 'POST',
@@ -38,13 +39,13 @@
 				document.cookie = `auth=${code}; path=/`;
 				location.reload();
 			} else if (res.fail) {
-				document.querySelector('p').textContent = res.fail;
+				p.textContent = res.fail;
 				setTimeout(() => {
-					document.querySelector('p').textContent = 'Please, enter your subscription code to access the site';
+					p.textContent = 'Please, enter your subscription code to access the site';
 				}, 3000);
 			}
 		} else {
-			document.querySelector('p').textContent = 'Server error. Please try again later';
+			p.textContent = 'Server error. Please try again later';
 		}
 });
 </script>
