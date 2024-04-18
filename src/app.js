@@ -23,7 +23,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// read cookie
 app.use((req, res, next) => {
     const { cookie } = req.headers;
     if (cookie) {
