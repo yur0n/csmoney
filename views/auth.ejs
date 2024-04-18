@@ -27,16 +27,13 @@
 		let p = document.querySelector('p');
 		const code = e.target.code.value;
 		const response = await fetch('/subscribe', {
-				method: 'POST',
 				headers: {
-						'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ code }),
+					'authorization': 'Bearer ' + code
+				}
 		});
 		if (response.ok) {
 			const res = await response.json();
 			if (res.success) {
-				document.cookie = `auth=${code}; path=/`;
 				location.reload();
 			} else if (res.fail) {
 				p.textContent = res.fail;
@@ -47,7 +44,7 @@
 		} else {
 			p.textContent = 'Server error. Please try again later';
 		}
-});
+	});
 </script>
 </body> 
 </html>

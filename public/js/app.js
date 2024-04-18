@@ -100,15 +100,15 @@ window.addEventListener("message", (e) => {
             <p>Profit: ${skin.profit}%</p>
             `;
             table.appendChild(row);
-        })
-        console.log(toBot)
-        if (toBot.length) {
+        });
+        const chatId = localStorage.getItem('telegram-id');
+        if (toBot.length && chatId) {
             fetch('/telegram', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ chatId: localStorage.getItem('telegram-id'), data: toBot })
+                body: JSON.stringify({ chatId, data: toBot })
             })
             .then(res => res.json())
             .then(console.log)

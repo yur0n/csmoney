@@ -30,7 +30,7 @@ export async function createUserAndSub(productCode = '10') {
 		const code = hash(index, productCode);
 		await User.create({ _id: index, code });
 		await Sub.create({ _id: index, code, expirationDate: setSubTime(30) });
-		return { code, index}
+		return { code, index }
 	} catch (error) {
 		console.log('Bot admin error:', error)
 	}

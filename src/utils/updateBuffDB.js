@@ -1,25 +1,31 @@
-import { Skin } from '../models/skin.js'
+import { Skin } from '../models/models.js'
 import skinIDs from './getSkinIDs.js';
-import '../db/connection.js'
-// fetch('https://www.currency.me.uk/convert/usd/cny').then
+import * as cheerio from 'cheerio';
+import { CronJob } from 'cron';
 
-updateSkins();
+updateSkins()
+
+new CronJob(
+	'0 0 */6 * * *',
+  updateSkins,
+	null,
+	true,
+	'America/Los_Angeles'
+);
 
 async function updateSkins() {
+  console.log('Updating BUFF skins...');
+  const usdToCny = await fetchCurrency()
   for (const { name, id } of skinIDs) {
     try {
-      console.log(id, name)
-      const price = await getSkinPrice(id);
-      if (!price) {
-				console.log(`skin ${name} price not found`)
-        continue;
-			}
+      const price = await getSkinPrice(id, usdToCny);
+      if (!price) continue;
       await saveSkin(id, name, price);
-      console.log(`skin ${name} saved`)
     } catch (error) {
-      console.error(`Error updating skin ${name}:`, error);
+      console.error(`Error updating BUFF skin ${name}:`, error);
     }
   }
+  console.log('BUFF skins updated');
 }
 
 async function saveSkin(_id, name, price ) {
@@ -34,32 +40,41 @@ async function saveSkin(_id, name, price ) {
   }
 }
 
-async function getSkinPrice(id, attempts = 0) {
-  await new Promise(resolve => setTimeout(resolve, 1000));
-	if (attempts > 1) return 0;
+async function getSkinPrice(id, usdToCny, attempts = 0) {
+  await new Promise(resolve => setTimeout(resolve, 500));
   let price = 0;
+	if (attempts > 1) return price;
   try {
-    const usdToCny = await fetchCurrency();
-    const url = `https://buff.163.com/api/market/goods/sell_order?game=csgo&goods_id=${id}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1`
+    const url = `https://buff.163.com/api/market/goods/sell_order?game=csgo&goods_id=${id}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1`;
     const response = await fetch(url);
     if (response.ok) {
       const res = await response.json();
       const cnyPrice = res.data.items[0]?.lowest_bargain_price;
-      price = cnyPrice ? Math.max(0.01, parseFloat((cnyPrice / usdToCny).toFixed(2))) : 0;
+      price = cnyPrice ? Math.max(0.01, (cnyPrice / usdToCny).toFixed(2)) : 0;
     } else {
-      console.error(`HTTP-Error: ${response.status}`);
-      price = await getSkinPrice(id, ++attempts);
+      // console.error(`HTTP-Error: ${response.status}`);
+      price = await getSkinPrice(id, usdToCny, ++attempts);
     }
   } catch (error) {
-    console.error(`Error fetching skin price:`, error);
-		price = await getSkinPrice(id, ++attempts);
+    // console.error(`Error fetching skin price:`, error);
+		price = await getSkinPrice(id, usdToCny, ++attempts);
   }
 
   return price;
 }
 
 async function fetchCurrency() {
-	return 7.236
+  return fetch('https://www.currency.me.uk/convert/usd/cny')
+    .then(res => res.text())
+    .then(res => {
+        const $ = cheerio.load(res);
+        const cur = $('.mini.ccyrate').text();
+        console.log('Currency fetched:', cur);
+        return parseFloat(cur.split(" ")[3]);
+    })
+    .catch(error => {
+        console.error(error);
+        console.error('Error fetching currency, returning default value');
+        return 7.2381;
+    });
 }
-
-

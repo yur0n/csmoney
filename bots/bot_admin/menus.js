@@ -12,7 +12,6 @@ const main = new Menu('main-menu')
     .text('✏️ Update subscription by user index', async ctx => {
 		await ctx.conversation.enter('updateSub')
 	})
-	// .url('👥 Все подписчики', 'http://yuron.xyz:8080/allsubs?token=ht2a33B4EQ4226dpH')
 
 export default main
 

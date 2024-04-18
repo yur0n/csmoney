@@ -1,11 +1,10 @@
 import express from 'express';
 import './db/connection.js';
-//import MongoStore from 'connect-mongo'; // session store for passport
 import cors from 'cors';
 import { join } from 'path';
 import { Skin, Sub } from './models/models.js';
 import notifyTg from '../bots/bot_notifier.js';
-// import '../bots/bot_admin.js'
+import '../bots/bot_admin.js'
 import '../bots/bot_notifier.js'
 
 const codePattern = /^[A-Za-z0-9%$#@!*()^]{2}[A-Za-z0-9%$#@!*()^]\d{2}[A-Za-z0-9%$#@!*()^]\d{2}[A-Za-z0-9%$#@!*()^]\d{2}[A-Za-z0-9%$#@!*()^]\d+[A-Za-z0-9%$#@!*()^]\d+$/;
@@ -56,12 +55,18 @@ app.post('/telegram', async (req, res) => {
 	}
 });
 
-app.post('/subscribe', async (req, res) => {
+app.get('/subscribe', async (req, res) => {
 	try {
-		const { code } = req.body;
+		const code = req.headers['authorization'].split(' ')[1];
 		if (code && codePattern.test(code)) {
 			const sub = await Sub.findOne({ code });
-			if (sub) return res.send({ success: 'Access granted' });
+			if (sub) {
+				res.cookie('auth', code, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true });
+				res.send({ success: 'Access granted' });
+				return;
+			} 
+		} else {
+			console.log('Invalid code:', code);
 		}
 		res.send({ fail: 'Invalid code' });
 	} catch (error) {
