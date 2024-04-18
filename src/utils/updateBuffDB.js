@@ -69,7 +69,6 @@ async function fetchCurrency() {
     .then(res => {
         const $ = cheerio.load(res);
         const cur = $('.mini.ccyrate').text();
-        console.log('Currency fetched:', cur);
         return parseFloat(cur.split(" ")[3]);
     })
     .catch(error => {
