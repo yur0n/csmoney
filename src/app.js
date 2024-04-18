@@ -30,6 +30,7 @@ app.use((req, res, next) => {
             const data = item.trim().split('=');
             return { ...res, [data[0]]: data[1] };
         }, {});
+				console.log(values);
         res.locals.cookie = values;
     }
     else res.locals.cookie = {};
@@ -65,8 +66,6 @@ app.get('/subscribe', async (req, res) => {
 				res.send({ success: 'Access granted' });
 				return;
 			} 
-		} else {
-			console.log('Invalid code:', code);
 		}
 		res.send({ fail: 'Invalid code' });
 	} catch (error) {

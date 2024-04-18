@@ -3,9 +3,6 @@ import https from 'https';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-app.listen(3000, () => {
-	console.log('Server running on port 3000');
-});
 const port = process.env.PORT || 443;
 
 const privateKey = readFileSync(join(import.meta.dirname, '../../tls/key.pem'), 'utf8');

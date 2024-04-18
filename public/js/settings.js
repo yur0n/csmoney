@@ -11,7 +11,6 @@ inputs.forEach(input => {
 		let value = input.value;
 		const profit = input.id === 'max-profit' || input.id === 'min-profit';
 		if (profit) {
-			// value = value.toString().replace('%', '');
 			value = value.replace(/\D/g, '');
 			input.value = value + '%';
 			
