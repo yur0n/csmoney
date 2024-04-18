@@ -9,7 +9,7 @@ const setSubTime = (days) => {
 
 function hash(buyerIndex, productCode) {
 	function char() {
-		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZa%$#@!*()^bcdefghijklmnopqrstuvwxyz';
+		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZa%$#@!*()bcdefghijklmnopqrstuvwxyz';
 		return chars[Math.floor(Math.random() * chars.length)];
 	}
 

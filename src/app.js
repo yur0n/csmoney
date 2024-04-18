@@ -8,7 +8,7 @@ import '../bots/bot_admin.js'
 import '../bots/bot_notifier.js'
 import './utils/updateBuffDB.js'
 
-const codePattern = /^[A-Za-z0-9%$#@!*()^]{2}[A-Za-z0-9%$#@!*()^]\d{2}[A-Za-z0-9%$#@!*()^]\d{2}[A-Za-z0-9%$#@!*()^]\d{2}[A-Za-z0-9%$#@!*()^]\d+[A-Za-z0-9%$#@!*()^]\d+$/;
+const codePattern = /^[A-Za-z0-9%$#@!*()]{2}[A-Za-z0-9%$#@!*()]\d{2}[A-Za-z0-9%$#@!*()]\d{2}[A-Za-z0-9%$#@!*()]\d{2}[A-Za-z0-9%$#@!*()]\d+[A-Za-z0-9%$#@!*()]\d+$/;
 
 const app = express();
 
@@ -30,7 +30,6 @@ app.use((req, res, next) => {
             const data = item.trim().split('=');
             return { ...res, [data[0]]: data[1] };
         }, {});
-				console.log(values);
         res.locals.cookie = values;
     }
     else res.locals.cookie = {};
