@@ -56,13 +56,13 @@ clearButton.addEventListener('click', () => {
 
 
 async function start() {
-    const minProfitCoef = 1 - parseInt(localStorage.getItem('min-profit')) / 100;
-    const maxProfitCoef = 1 + parseInt(localStorage.getItem('max-profit')) / 100;
+    const minProfitCoef = 1 + parseFloat(localStorage.getItem('min-profit')) / 100;
+    const maxProfitCoef = 1 + parseFloat(localStorage.getItem('max-profit')) / 100;
     const data = {
         maxPrice: localStorage.getItem('max-price') || 1000,
         minPrice: localStorage.getItem('min-price') || 100,
-        minProfit: minProfitCoef || 0.8,
-        maxProfit: maxProfitCoef || 1.5
+        minProfit: minProfitCoef || 1.01,
+        maxProfit: maxProfitCoef || 1.15
     }
     const row = document.createElement('div');
     row.classList.add('table-content__info-row');
@@ -98,6 +98,7 @@ window.addEventListener("message", (e) => {
             <p>CS.Money Price: ${skin.csPrice}</p>
             <p>BUFF163 Price: ${skin.buffPrice}</p>
             <p>Profit: ${skin.profit}%</p>
+            <p><a href="${skin.link}" target="_blank">СS.Money Link</a></p>
             `;
             table.appendChild(row);
         });

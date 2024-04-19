@@ -41,13 +41,13 @@ export default async (skins, chatId) => {
 			`;
 		await bot.api.sendPhoto(chatId, skin.photo, {
 			caption: message,
-			// reply_markup: {
-			// 	inline_keyboard: [
-			// 		[{ text: 'BUY', url: item.link }]
-			// 	]
-			// }
+			reply_markup: {
+				inline_keyboard: [
+					[{ text: 'СS.Money Link', url: skin.link }]
+				]
+			}
 		})
-		.catch(() => can_send_to_bot = false)
+		.catch((e) => {console.log(e);can_send_to_bot = false})
 		await new Promise(resolve => setTimeout(resolve, 2000));
 	}
 }

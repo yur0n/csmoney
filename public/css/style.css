@@ -21,6 +21,12 @@ body {
     color: #000;
 }
 
+a {
+    text-decoration: none;
+    font-family: 'Josefin Sans', sans-serif;
+    color: #b7b6bb;
+}
+
 .wrapper {
     width: 100%;
     margin: 0 auto;
