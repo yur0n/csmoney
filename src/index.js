@@ -5,8 +5,8 @@ import { join } from 'path';
 
 const port = process.env.PORT || 443;
 
-const privateKey = readFileSync(join(import.meta.dirname, '../../tls/key.pem'), 'utf8');
-const certificate = readFileSync(join(import.meta.dirname, '../../tls/cert.pem'), 'utf8');
+const privateKey = readFileSync(join(import.meta.dirname, '../tls/key.pem'), 'utf8');
+const certificate = readFileSync(join(import.meta.dirname, '../tls/cert.pem'), 'utf8');
 
 const credentials = {
   key: privateKey,
