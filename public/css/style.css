@@ -599,7 +599,7 @@ input[type=number] {
     background: #4b4856;
     border: 3px solid #656270;
     margin-top: 20px;
-    padding: 10px 5px;
+    padding: 5px;
 }
 
 .logs-content__scrollbar {

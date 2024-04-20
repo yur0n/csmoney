@@ -7,7 +7,7 @@ const modals = document.querySelectorAll('.modal');
 const table = document.querySelector('.table-content__info');
 const logsTable = document.querySelector('.logs-content__info');
 
-let interval;
+let timeout;
 const histrory = [];
 
 openModalButtons.forEach(btn => {
@@ -40,7 +40,7 @@ startButton.addEventListener('click', () => {
     if (startButton.classList.contains('active')) {
         start();
     } else {
-        clearInterval(interval);
+        clearTimeout(timeout);
     }
 });
 
@@ -70,7 +70,7 @@ async function start() {
     logsTable.appendChild(row);
 
     window.postMessage({ parse: true, data }, "*");
-    interval = setTimeout(() => {
+    timeout = setTimeout(() => {
         start();
     }, 15_000);
 }
@@ -79,10 +79,15 @@ window.addEventListener("message", (e) => {
     if (e.data.parsedSkins) {
         const skins = e.data.parsedSkins
         if (skins.error) {
+
             const row = document.createElement('div');
             row.classList.add('table-content__info-row');
             row.innerHTML = `<h4>${formatDate()} - ${skins.error}</h4><p>Status: ${skins?.status}</p>`;
             logsTable.appendChild(row);
+            if (skins.status === 409) {
+                startButton.classList.toggle('active');
+                clearTimeout(timeout);
+            }
             return;
         }
         console.log(skins);
