@@ -57,8 +57,9 @@ app.post('/telegram', async (req, res) => {
 
 app.get('/subscribe', async (req, res) => {
 	try {
-		const code = req.headers['authorization'].split(' ')[1];
-		if (code && codePattern.test(code)) {
+		const authorization = req.headers['authorization'];
+		const code = authorization ? authorization.split(' ')[1] : null;
+		if (authorization && codePattern.test(code)) {
 			const sub = await Sub.findOne({ code });
 			if (sub) {
 				res.cookie('auth', code, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true });
