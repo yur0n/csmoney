@@ -3,6 +3,18 @@ import https from 'https';
 import socket from './socket.js';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import connectToDb from './db/connection.js';
+
+import '../bots/bot_admin.js'
+import '../bots/bot_notifier.js'
+import './utils/updateBuffDB.js'
+
+try {
+  await connectToDb();
+  console.log('Connected to DB');
+} catch (error) {
+  console.log('Error connecting to DB', error.message);
+}
 
 // import http from 'http';
 // const httpServer = http.createServer(app);

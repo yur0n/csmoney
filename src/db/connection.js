@@ -1,5 +1,5 @@
 import { connect } from 'mongoose';
 
-(async function connectDB() {
+export default async function connectToDb() {
 	await connect(process.env.MONGODB_CONNECTION)
-})()
+}

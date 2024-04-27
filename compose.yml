@@ -19,12 +19,12 @@ services:
       
   mongo:
     container_name: mongo
-    image: mongo:4.4.29
+    image: mongo
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=main
     volumes:
-      - mongodbdata:/var/lib/mongo/data
+      - mongodbdata:/data/db
     
 volumes:
   mongodbdata:

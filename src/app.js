@@ -1,12 +1,8 @@
 import express from 'express';
-import './db/connection.js';
 import cors from 'cors';
 import { join } from 'path';
 import { Skin, Sub } from './models/models.js';
 import notifyTg from '../bots/bot_notifier.js';
-import '../bots/bot_admin.js'
-import '../bots/bot_notifier.js'
-import './utils/updateBuffDB.js'
 
 const codePattern = /^[A-Za-z0-9%$#@!*()]{2}[A-Za-z0-9%$#@!*()]\d{2}[A-Za-z0-9%$#@!*()]\d{2}[A-Za-z0-9%$#@!*()]\d{2}[A-Za-z0-9%$#@!*()]\d+[A-Za-z0-9%$#@!*()]\d+$/;
 

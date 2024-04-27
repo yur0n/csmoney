@@ -1,10 +1,8 @@
 import { Menu } from "@grammyjs/menu"
-import { createUserAndSub } from "./conversations.js"
 
 const main = new Menu('main-menu')
 	.text('➕ Generate code', async ctx => {
-		const code = await createUserAndSub();
-		ctx.reply(`Generated code: ${code.code}\nUser index: ${code.index}`);
+		await ctx.conversation.enter('createUserAndSub')
 	}).row()
 	.text('❌ Delete subscription by user index', async ctx => {
 		await ctx.conversation.enter('deleteSub')
@@ -14,5 +12,3 @@ const main = new Menu('main-menu')
 	})
 
 export default main
-
-

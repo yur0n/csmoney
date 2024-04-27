@@ -23,14 +23,22 @@ function hash(buyerIndex, productCode) {
   return `${rawCode}${char()}${hash}`;
 }
 
-export async function createUserAndSub(productCode = '10') {
+
+export async function createUserAndSub(conversation, ctx) {
 	try {
+		let ask = await ctx.reply('⌨️ Enter product code', {
+			reply_markup: new InlineKeyboard().text('🚫 Cancel')
+		});
+		ctx = await conversation.wait();
+		deleteMsg(ctx, ask.chat.id, ask.message_id)
+		if (ctx.update.callback_query?.data) return
+		const productCode = ctx.msg.text;
 		const lastBuyer = await User.findOne({}).sort({_id: -1});
 		const index = lastBuyer ? lastBuyer._id + 1 : 1;
 		const code = hash(index, productCode);
 		await User.create({ _id: index, code });
 		await Sub.create({ _id: index, code, expirationDate: setSubTime(30) });
-		return { code, index }
+		ctx.reply(`Generated code: ${code}\nUser index: ${index}`);
 	} catch (error) {
 		console.log('Bot admin error:', error)
 	}
