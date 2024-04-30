@@ -30,24 +30,24 @@ process.once("SIGTERM", () => bot.stop());
 bot.start()
 
 export default async (skins, chatId) => {
-	if (!skins.length) return;
-	let can_send_to_bot = true
-	for (const skin of skins) {
-		let message = `
-			${skin.name}
-			\nCS.Money Price: ${skin.csPrice}
-			\nBUFF163 Price: ${skin.buffPrice}
-			\nProfit: ${skin.profit}%
-			`;
-		await bot.api.sendPhoto(chatId, skin.photo, {
-			caption: message,
-			reply_markup: {
-				inline_keyboard: [
-					[{ text: 'СS.Money Link', url: skin.link }]
-				]
-			}
-		})
-		.catch((e) => {console.log(e);can_send_to_bot = false})
-		await new Promise(resolve => setTimeout(resolve, 2000));
-	}
+	try {
+		if (!skins.length) return;
+		for (const skin of skins) {
+			let message = `
+				${skin.name}
+				\nCS.Money Price: ${skin.csPrice}
+				\nBUFF163 Price: ${skin.buffPrice}
+				\nProfit: ${skin.profit}%
+				`;
+			await bot.api.sendPhoto(chatId, skin.photo, {
+				caption: message,
+				reply_markup: {
+					inline_keyboard: [
+						[{ text: 'СS.Money Link', url: skin.link }]
+					]
+				}
+			});
+			await new Promise(resolve => setTimeout(resolve, 2000));
+		}
+	} catch (e) {}
 }

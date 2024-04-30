@@ -338,7 +338,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 25px;
+    padding: 13px 25px 13px 25px;
     gap: 40px;
     background: #383643;
 }
