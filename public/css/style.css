@@ -347,7 +347,7 @@ a {
     width: 40px;
     position: absolute;
     left: 25px;
-    top: 45px;
+    top: 30px;
     display: flex;
     flex-direction: column;
     row-gap: 10px;
